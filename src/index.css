@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'locomotive-scroll/dist/locomotive-scroll.css';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+html.has-scroll-smooth {
+    overflow: hidden;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+[data-scroll-container] {
+    min-height: 100vh;
+}
+
+/* Enhanced pulse animation */
+.pulse-animation {
+  animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+  
+  70% {
+    transform: scale(1);
+    opacity: 0.2;
+  }
+  
+  100% {
+    transform: scale(1.05);
+    opacity: 0;
+  }
+}
+
+/* 3D card perspective effects */
+.perspective-card {
+  perspective: 1000px;
+}
+
+.partner-card {
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.partner-card-inner {
+  backface-visibility: hidden;
+}
+
+/* Advanced hover effects */
+@media (hover: hover) {
+  /* Magnetic button effect */
+  .magnetic-btn {
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  /* Glassmorphism effect */
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Shine effect */
+  .shine-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shine-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
+    transform: skewX(-25deg);
+    transition: all 0.75s;
+  }
+  
+  .shine-effect:hover::before {
+    left: 125%;
+  }
+}
+
+/* Custom animated cursor */
+.custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 9999;
+  transition: transform 0.2s ease;
+}
+
+.cursor-expanded {
+  transform: translate(-50%, -50%) scale(3);
+  background: rgba(59, 130, 246, 0.2);
+}
