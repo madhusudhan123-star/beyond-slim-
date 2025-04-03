@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Lenis from "@studio-freight/lenis";
+import React, { useEffect, useState } from 'react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Trust from '../components/home/Trust';
@@ -26,67 +25,32 @@ import { motion } from 'framer-motion';
 import banner from '../assets/homebanner1.jpg';
 import banner2 from '../assets/homebanner2.jpg';
 
-
 gsap.registerPlugin(ScrollTrigger);
 
 const Home = () => {
-    const lenisRef = useRef(null);
     const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
     const bannerImages = [banner, banner2]; // Images for the banner slider
     const bannerTexts = header.animationSequence.filter(item => typeof item === 'string');
 
     useEffect(() => {
-        // Prevent default scrolling behavior
+        // Use standard scrolling behavior
         document.documentElement.style.scrollBehavior = 'auto';
 
-        // Initialize Lenis with optimized settings
-        const lenis = new Lenis({
-            duration: 1.2,
-            smoothWheel: true,
-            smoothTouch: false, // Disable smooth scrolling for touch devices
-            touchMultiplier: 2,
-            infinite: false,
-            wheelMultiplier: 1,
-            lerp: 0.1,
-            orientation: 'vertical',
-            gestureOrientation: 'vertical',
-            normalizeWheel: true,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) // Smoother easing function
-        });
+        // Initialize ScrollTrigger without Lenis
+        // No smooth scrolling implementation needed
 
-        lenisRef.current = lenis;
-
-        // Sync Lenis with GSAP ScrollTrigger
-        lenis.on('scroll', ScrollTrigger.update);
-
-        gsap.ticker.add((time) => {
-            lenis.raf(time * 1000);
-        });
-
-        // Stop scrolling animation when window is resized
+        // Handle window resizing if needed
         const handleResize = () => {
-            lenis.stop();
-            setTimeout(() => lenis.start(), 50);
+            // Window resize handling without smooth scrolling
+            ScrollTrigger.refresh();
         };
 
         window.addEventListener('resize', handleResize);
 
-        // Handle navigation and scroll restoration
-        const handlePageShow = (e) => {
-            if (e.persisted) {
-                lenis.scrollTo(0, { immediate: true });
-            }
-        };
-
-        window.addEventListener('pageshow', handlePageShow);
-
         // Cleanup
         return () => {
-            lenis.destroy();
             window.removeEventListener('resize', handleResize);
-            window.removeEventListener('pageshow', handlePageShow);
             document.documentElement.style.scrollBehavior = '';
-            gsap.ticker.remove(lenis.raf);
         };
     }, []);
 
@@ -102,17 +66,15 @@ const Home = () => {
     return (
         <main className='relative overflow-hidden font-montserrat'>
             {/* Image Banner Header Section */}
-            <section className='min-h-[80vh] relative z-20 overflow-hidden flex items-center justify-center'>
-                {/* Simple Background */}
-                {/* <div className='absolute inset-0 bg-gradient-to-b from-blue-600/5 to-blue-400/10'></div> */}
+            <section className='min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh] relative z-20 overflow-hidden flex items-center justify-center'>
                 
-                <div className='container mx-auto px-4 pt-16 flex flex-col items-center justify-center relative z-10'>
+                <div className='container mx-auto px-2 sm:px-4 pt-8 sm:pt-12 md:pt-16 flex flex-col items-center justify-center relative z-10 w-full'>
                     {/* Banner Image Slider */}
                     <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1 }}
-                        className='relative w-screen h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden'
+                        className='relative w-full h-[200px] sm:h-[250px] md:h-[400px] lg:h-[500px] overflow-hidden rounded-lg shadow-lg'
                     >
                         {bannerImages.map((img, index) => (
                             <motion.div
@@ -128,18 +90,32 @@ const Home = () => {
                                 <img 
                                     src={img} 
                                     alt={`Banner ${index + 1}`}
-                                    className='w-full h-full object-cover' 
+                                    className='w-full h-full object-cover object-center' 
                                 />
                                 
-                                {/* Optional text overlay on the image */}
+                                {/* Optional text overlay - now with better mobile responsive text sizing */}
                                 {/* <div className='absolute inset-0 flex items-center justify-center bg-black/20'>
-                                    <h2 className='text-4xl md:text-5xl lg:text-6xl font-bold text-center text-white w-full px-6 drop-shadow-lg'>
+                                    <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center text-white w-full px-3 sm:px-6 drop-shadow-lg'>
                                         {bannerTexts[index] || ''}
                                     </h2>
                                 </div> */}
                             </motion.div>
                         ))}
                     </motion.div>
+                    
+                    {/* Optional: Banner Navigation Dots */}
+                    <div className="flex justify-center mt-3 sm:mt-4">
+                        {bannerImages.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentBannerIndex(index)}
+                                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full mx-1 sm:mx-2 ${
+                                    currentBannerIndex === index ? 'bg-blue-600' : 'bg-gray-300'
+                                }`}
+                                aria-label={`Go to slide ${index + 1}`}
+                            />
+                        ))}
+                    </div>
                 </div>
             </section>
 

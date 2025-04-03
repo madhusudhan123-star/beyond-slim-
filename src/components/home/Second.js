@@ -139,10 +139,10 @@ const Second = () => {
                         </p>
                         <div className="flex">
                             <a 
-                                href="#learn-more" 
+                                href="/product" 
                                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300"
                             >
-                                Learn More
+                                Buy Now
                             </a>
                         </div>
                     </div>

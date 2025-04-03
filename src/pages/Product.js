@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Engine, World, Bodies, Body } from 'matter-js';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import product from '../assets/about_product.png';
 import { productPage } from '../utility/data';
@@ -8,158 +7,15 @@ import { FaShieldAlt, FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaTruck, FaUndo
 const Product = () => {
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
-    const canvasRef = useRef(null);
-    const engineRef = useRef(null);
-    const boxesRef = useRef([]);
-    const requestRef = useRef(null);
-    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [activeTab, setActiveTab] = useState('description');
     const [showFaq, setShowFaq] = useState({});
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
-        const updateDimensions = () => {
-            setDimensions({
-                width: window.innerWidth,
-                height: window.innerHeight
-            });
-        };
-
-        updateDimensions();
-        window.addEventListener('resize', updateDimensions);
-        return () => window.removeEventListener('resize', updateDimensions);
     }, []);
 
-    useEffect(() => {
-        if (!dimensions.width || !dimensions.height) return;
-
-        // Initialize matter.js
-        engineRef.current = Engine.create();
-        const engine = engineRef.current;
-
-        // Create walls
-        const wallThickness = 60;
-        const walls = [
-            Bodies.rectangle(dimensions.width / 2, dimensions.height + 30, dimensions.width, wallThickness, { isStatic: true }),
-            Bodies.rectangle(-30, dimensions.height / 2, wallThickness, dimensions.height, { isStatic: true }),
-            Bodies.rectangle(dimensions.width + 30, dimensions.height / 2, wallThickness, dimensions.height, { isStatic: true })
-        ];
-
-        World.add(engine.world, walls);
-
-        const createBox = () => {
-            const gradientColors = [
-                { start: '#FF6B6B', end: '#FF8E8E' },
-                { start: '#4ECDC4', end: '#45B7D1' },
-                { start: '#96CEB4', end: '#FFEEAD' },
-                { start: '#D4A5A5', end: '#E8C3C3' },
-                { start: '#9A8194', end: '#B6A0AE' }
-            ];
-
-            const size = Math.random() * 40 + 20;
-            const x = Math.random() * dimensions.width;
-            const colorPair = gradientColors[Math.floor(Math.random() * gradientColors.length)];
-
-            return {
-                body: Bodies.rectangle(x, -50, size, size, {
-                    friction: 0.3,
-                    restitution: 0.6,
-                    density: 0.001
-                }),
-                colorStart: colorPair.start,
-                colorEnd: colorPair.end,
-                angle: Math.random() * Math.PI
-            };
-        };
-
-        const animate = () => {
-            Engine.update(engine);
-            const ctx = canvasRef.current.getContext('2d');
-            ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-
-            if (boxesRef.current.length < 50 && Math.random() > 0.95) {
-                const newBox = createBox();
-                boxesRef.current.push(newBox);
-                World.add(engine.world, newBox.body);
-            }
-
-            boxesRef.current.forEach((box, index) => {
-                const { body, colorStart, colorEnd } = box;
-                ctx.save();
-                ctx.translate(body.position.x, body.position.y);
-                ctx.rotate(body.angle);
-
-                const gradient = ctx.createLinearGradient(
-                    -body.bounds.max.x / 2,
-                    -body.bounds.max.y / 2,
-                    body.bounds.max.x / 2,
-                    body.bounds.max.y / 2
-                );
-                gradient.addColorStop(0, colorStart);
-                gradient.addColorStop(1, colorEnd);
-
-                ctx.shadowColor = colorStart;
-                ctx.shadowBlur = 20;
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.roundRect(
-                    -body.bounds.max.x / 2,
-                    -body.bounds.max.y / 2,
-                    body.bounds.max.x,
-                    body.bounds.max.y,
-                    8
-                );
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-                ctx.roundRect(
-                    -body.bounds.max.x / 4,
-                    -body.bounds.max.y / 4,
-                    body.bounds.max.x / 2,
-                    body.bounds.max.y / 2,
-                    4
-                );
-                ctx.fill();
-
-                ctx.restore();
-
-                if (body.position.y > dimensions.height + 100) {
-                    World.remove(engine.world, body);
-                    boxesRef.current.splice(index, 1);
-                }
-            });
-
-            requestRef.current = requestAnimationFrame(animate);
-        };
-
-        requestRef.current = requestAnimationFrame(animate);
-
-        return () => {
-            if (requestRef.current) {
-                cancelAnimationFrame(requestRef.current);
-                requestRef.current = null;
-            }
-
-            if (engineRef.current) {
-                World.clear(engineRef.current.world);
-                Engine.clear(engineRef.current);
-                engineRef.current = null;
-            }
-
-            if (boxesRef.current) {
-                boxesRef.current = [];
-            }
-        };
-    }, [dimensions]);
-
     const handleAddToCart = () => {
-        if (requestRef.current) {
-            cancelAnimationFrame(requestRef.current);
-            requestRef.current = null;
-        }
-
         const price = 3990;
         const productDetails = {
             productName: productPage.title,
@@ -212,11 +68,6 @@ const Product = () => {
             question: 'Is this product suitable for vegetarians?', 
             answer: 'Yes, our product is vegetarian-friendly and contains no animal-derived ingredients.' 
         },
-        { 
-            id: 4, 
-            question: 'What is your return policy?', 
-            answer: 'We offer a 15-day satisfaction guarantee. If you\'re not completely satisfied, you can return the product for a full refund, no questions asked.' 
-        }
     ];
 
     // Customer reviews
@@ -250,12 +101,6 @@ const Product = () => {
 
     return (
         <div className="min-h-screen bg-white overflow-hidden">
-            <canvas
-                ref={canvasRef}
-                width={dimensions.width}
-                height={dimensions.height}
-                className="fixed top-0 left-0 w-full h-full pointer-events-none"
-            />
             <section className={`relative w-full min-h-screen bg-transparent transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
                 {/* Hero Section */}
                 <div className="w-full pt-28 pb-16 bg-gradient-to-b from-blue-50 to-white shadow-sm">
@@ -428,17 +273,6 @@ const Product = () => {
                                         </li>
                                     ))}
                                 </ul>
-                                
-                                {/* <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
-                                    <h5 className="font-semibold text-blue-800 mb-2">Suggested Use:</h5>
-                                    <p className="text-blue-700">
-                                        For best results, take 2 capsules with water 30 minutes before your first meal of the day. For enhanced results, take an additional capsule before exercise.
-                                    </p>
-                                </div> */}
-                                
-                                {/* <p className="text-sm text-gray-500 italic">
-                                    * These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.
-                                </p> */}
                             </div>
                         )}
                         

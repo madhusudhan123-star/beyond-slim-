@@ -1,79 +1,163 @@
 import React from 'react';
 import { footerData } from '../utility/data';
-import { FaFacebookF, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebookF, FaInstagram, FaWhatsapp, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { motion } from 'framer-motion';
 import logo from '../assets/logo.png';
 
 const Footer = () => {
     const socialIcons = [
-        { icon: <FaFacebookF />, link: 'https://www.facebook.com/people/Beyond-Slim-Body-Slimming-Oil/61559800233749/', label: 'Facebook' },
-        { icon: <FaInstagram />, link: 'https://www.instagram.com/beyondslimmingoil/', label: 'Instagram' },
-        { icon: <FaWhatsapp />, link: 'https://wa.me/+919908526444', label: 'WhatsApp' }
+        { icon: <FaFacebookF />, link: 'https://www.facebook.com/people/Beyond-Slim-Body-Slimming-Oil/61559800233749/', label: 'Facebook', color: '#3b5998' },
+        { icon: <FaInstagram />, link: 'https://www.instagram.com/beyondslimmingoil/', label: 'Instagram', color: '#e1306c' },
+        { icon: <FaWhatsapp />, link: 'https://wa.me/+919908526444', label: 'WhatsApp', color: '#25D366' }
+    ];
+
+    const contactInfo = [
+        { icon: <FaPhoneAlt />, info: '+91 9908526444', link: 'tel:+919908526444' },
+        { icon: <FaEnvelope />, info: 'beyondslimayurveda@gmail.com', link: 'mailto:beyondslimayurveda@gmail.com' },
+        { icon: <FaMapMarkerAlt />, info: 'Hyderabad, India', link: '#' }
     ];
 
     return (
-        <footer className="relative z-40 bg-gradient-to-r from-gray-900 to-gray-700 text-gray-100">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-                    {/* Logo and Social Icons Section */}
-                    <div className="flex flex-col items-center md:items-start gap-6">
-                        <img
-                            src={logo}
-                            alt="Beyond Logo"
-                            className="h-16 w-auto hover:opacity-90 transition-opacity"
-                        />
-                        {/* Social Icons */}
-                        <div className="flex items-center gap-4">
-                            {socialIcons.map((item, index) => (
-                                <a
-                                    key={index}
-                                    href={item.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={item.label}
-                                    className="text-gray-300 hover:text-blue-400 transition-all duration-300 
-                                             p-2 rounded-full hover:bg-white/10 text-xl"
-                                >
-                                    {item.icon}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
+        <footer className="relative z-40 overflow-hidden">
+            {/* Top Wave Design */}
+            <div className="absolute top-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block h-[40px] w-full">
+                    <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" className="fill-blue-50"></path>
+                </svg>
+            </div>
 
-                    {/* Links Grid Section */}
-                    <div className="flex gap-12 md:gap-24">
-                        {footerData.columns.map((column, index) => (
-                            <div key={index} className="flex flex-col">
-                                <h3 className="text-xl font-semibold mb-6 text-blue-400 relative">
-                                    {column.title}
-                                    <span className="absolute -bottom-2 left-0 w-12 h-0.5 bg-blue-400"></span>
-                                </h3>
-                                <ul className="space-y-4">
-                                    {column.links.map((link, linkIndex) => (
-                                        <li key={linkIndex}>
-                                            <a
-                                                href={link.href}
-                                                className="text-gray-300 hover:text-yellow-300 transition-all duration-300 inline-block transform hover:translate-x-2"
-                                            >
-                                                {link.text}
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
+            {/* Main Footer Content */}
+            <div className="bg-gradient-to-b from-blue-600 to-blue-800 pt-16 pb-10 px-4">
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-10">
+                        
+                        {/* Company Info & Social */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                            className="flex flex-col items-center md:items-start"
+                        >
+                            <img src={logo} alt="Beyond Logo" className="h-16 mb-4 filter brightness-0 invert" />
+                            <p className="text-blue-100 text-sm mb-4 text-center md:text-left">
+                                Transform your body naturally with our innovative slimming solutions.
+                            </p>
+                            <div className="flex space-x-3 mt-2">
+                                {socialIcons.map((social, index) => (
+                                    <a 
+                                        key={index}
+                                        href={social.link} 
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        aria-label={social.label}
+                                        className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg transition-transform duration-300 hover:scale-110 hover:shadow-lg"
+                                        style={{ color: social.color }}
+                                    >
+                                        {social.icon}
+                                    </a>
+                                ))}
                             </div>
-                        ))}
+                        </motion.div>
+                        
+                        {/* Quick Links 1 */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.1 }}
+                            viewport={{ once: true }}
+                        >
+                            <h3 className="text-xl font-bold text-white mb-5 relative flex items-center">
+                                {footerData.columns[0].title}
+                                <span className="block absolute bottom-0 left-0 w-10 h-[2px] bg-blue-200 rounded-full"></span>
+                            </h3>
+                            <ul className="space-y-3">
+                                {footerData.columns[0].links.map((link, index) => (
+                                    <li key={index}>
+                                        <a href={link.href} className="text-blue-100 hover:text-white transition-all duration-300 flex items-center">
+                                            <span className="mr-2">›</span>
+                                            {link.text}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </motion.div>
+                        
+                        {/* Quick Links 2 */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{ once: true }}
+                        >
+                            <h3 className="text-xl font-bold text-white mb-5 relative flex items-center">
+                                {footerData.columns[1].title}
+                                <span className="block absolute bottom-0 left-0 w-10 h-[2px] bg-blue-200 rounded-full"></span>
+                            </h3>
+                            <ul className="space-y-3">
+                                {footerData.columns[1].links.map((link, index) => (
+                                    <li key={index}>
+                                        <a href={link.href} className="text-blue-100 hover:text-white transition-all duration-300 flex items-center">
+                                            <span className="mr-2">›</span>
+                                            {link.text}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </motion.div>
+                        
+                        {/* Contact Info */}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.3 }}
+                            viewport={{ once: true }}
+                        >
+                            <h3 className="text-xl font-bold text-white mb-5 relative flex items-center">
+                                Contact Us
+                                <span className="block absolute bottom-0 left-0 w-10 h-[2px] bg-blue-200 rounded-full"></span>
+                            </h3>
+                            <ul className="space-y-4">
+                                {contactInfo.map((item, index) => (
+                                    <li key={index} className="flex items-start">
+                                        <div className="text-blue-300 mt-1 mr-3">{item.icon}</div>
+                                        <a href={item.link} className="text-blue-100 hover:text-white transition-all duration-300">
+                                            {item.info}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </motion.div>
                     </div>
-                </div>
-
-                {/* Copyright and Social Text */}
-                <div className="border-t border-gray-800 mt-12 pt-8">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-gray-400 text-sm">
-                            © {new Date().getFullYear()} Beyond. All rights reserved.
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                            Connect with us on social media
-                        </p>
-                    </div>
+                    
+                    {/* Newsletter Signup */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                        viewport={{ once: true }}
+                        className="border-t border-blue-500/30 pt-8 mt-4"
+                    >
+                        <div className="flex flex-col md:flex-row items-center justify-between">
+                            <div className="text-white">
+                                © {new Date().getFullYear()} Beyond Slim. All rights reserved.
+                            </div>
+                            <div className="flex items-center space-x-4 mt-4 md:mt-0">
+                                <span className="text-blue-100">Payment Methods:</span>
+                                <div className="flex space-x-2">
+                                    <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
+                                        <span className="text-xs font-bold text-blue-900">VISA</span>
+                                    </div>
+                                    <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
+                                        <span className="text-xs font-bold text-blue-900">MC</span>
+                                    </div>
+                                    <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
+                                        <span className="text-xs font-bold text-blue-900">UPI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </footer>

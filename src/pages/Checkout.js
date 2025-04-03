@@ -336,7 +336,7 @@ const Checkout = () => {
     const navigate = useNavigate();
     const { language } = useLanguage();
     const checkoutData = data[language].checkout;
-    const orderDetails = location.state || { productName: 'Product', quantity: 1, totalAmount: 10 };
+    const orderDetails = location.state || { productName: 'Product', quantity: 1, totalAmount: 3990 };
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [formComplete, setFormComplete] = useState(false);
@@ -520,42 +520,41 @@ const Checkout = () => {
 
 const sendOrderConfirmationEmail = async (paymentDetails) => {
     try {
-        // Try using the backend email API first
+        // Generate a unique order number
+        const orderNumber = `BYD-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`;
+        
+        // Create order details object
+        const orderDetailsForEmail = {
+            orderNumber: orderNumber,
+            productName: orderDetails.productName,
+            quantity: orderDetails.quantity,
+            totalAmount: (orderDetails.totalAmount + SHIPPING_CHARGE).toFixed(2),
+            currency: '₹',
+            paymentMethod: paymentDetails.payment_method || 'Online Payment'
+        };
+        
+        // Create customer details object
+        const customerDetailsForEmail = {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            country: formData.country
+        };
+        
+        // Try using the backend order confirmation API
         try {
-            const emailResponse = await fetch('http://localhost:5000/send-email', {
+            const emailResponse = await fetch('https://razorpaybackend-wgbh.onrender.com/send-order-confirmation', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    to: formData.email,
-                    subject: `Order Confirmation - ${orderDetails.productName}`,
-                    message: `
-                        Dear ${formData.firstName} ${formData.lastName},
-
-                        Thank you for your order from Beyond Slim!
-
-                        Order Details:
-                        Product: ${orderDetails.productName}
-                        Quantity: ${orderDetails.quantity}
-                        Total: ${formatCurrency(orderDetails.totalAmount + SHIPPING_CHARGE)}
-                        
-                        Customer Information:
-                        Name: ${formData.firstName} ${formData.lastName}
-                        Email: ${formData.email}
-                        Phone: ${formData.phone}
-                        Address: ${formData.address}
-                        City: ${formData.city}
-                        Country: ${formData.country}
-                        
-                        Payment Information:
-                        Transaction ID: ${paymentDetails.id}
-                        Status: ${paymentDetails.status}
-                        
-                        Your order will be processed soon. For any questions, please contact our support team.
-                        
-                        Thank you for shopping with Beyond Slim!
-                    `
+                    customerEmail: formData.email,
+                    orderDetails: orderDetailsForEmail,
+                    customerDetails: customerDetailsForEmail
                 })
             });
             
@@ -564,7 +563,7 @@ const sendOrderConfirmationEmail = async (paymentDetails) => {
                 return true;
             }
         } catch (emailApiError) {
-            console.log("Backend email API failed, trying FormSubmit instead");
+            console.log("Backend email API failed, trying FormSubmit instead:", emailApiError);
         }
         
         // Fallback to FormSubmit if backend email API fails
@@ -580,6 +579,7 @@ const sendOrderConfirmationEmail = async (paymentDetails) => {
                 _captcha: 'false',
                 message: `
                     Order Details:
+                    Order Number: ${orderNumber}
                     Product: ${orderDetails.productName}
                     Quantity: ${orderDetails.quantity}
                     Total: ${formatCurrency(orderDetails.totalAmount + SHIPPING_CHARGE)}
@@ -612,93 +612,140 @@ const sendOrderConfirmationEmail = async (paymentDetails) => {
     }
 };
 
-    const validateForm = () => {
-        const errors = {};
+const trackAbandonedOrder = () => {
+    // Store order information in localStorage
+    if (formData.email) {
+        const abandonedOrderData = {
+            timestamp: new Date().toISOString(),
+            customerDetails: {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.phone,
+                address: formData.address,
+                city: formData.city,
+                country: formData.country
+            },
+            orderDetails: {
+                orderNumber: `BYD-CART-${Date.now().toString().slice(-6)}`,
+                productName: orderDetails.productName,
+                quantity: orderDetails.quantity,
+                totalAmount: (orderDetails.totalAmount + SHIPPING_CHARGE).toFixed(2),
+                currency: '₹'
+            }
+        };
+        
+        localStorage.setItem('beyondSlimAbandonedCart', JSON.stringify(abandonedOrderData));
+        
+        // If the window is about to be closed, try to send abandoned cart email
+        window.addEventListener('beforeunload', async (e) => {
+            // Only if we've collected information but haven't completed checkout
+            if (formComplete && !paymentSuccess) {
+                try {
+                    // Using navigator.sendBeacon for async request that will complete even if page closes
+                    navigator.sendBeacon('https://razorpaybackend-wgbh.onrender.com/send-abandoned-order-email', JSON.stringify({
+                        customerEmail: formData.email,
+                        orderDetails: abandonedOrderData.orderDetails,
+                        customerDetails: abandonedOrderData.customerDetails
+                    }));
+                } catch (error) {
+                    console.error('Failed to send abandoned order notification', error);
+                }
+            }
+        });
+    }
+};
 
-        // Existing validations
-        if (!formData.firstName) errors.firstName = 'First name is required';
-        if (!formData.lastName) errors.lastName = 'Last name is required';
-        if (!formData.email) errors.email = 'Email is required';
-        if (!formData.address) errors.address = 'Address is required';
-        if (!formData.city) errors.city = 'City is required';
+const validateForm = () => {
+    const errors = {};
 
-        // Enhanced phone validation
-        if (!formData.phone) {
-            errors.phone = 'Phone number is required';
-        } else if (!/^\d{10}$/.test(formData.phone)) {
-            errors.phone = 'Phone number must be exactly 10 digits';
-        }
+    // Existing validations
+    if (!formData.firstName) errors.firstName = 'First name is required';
+    if (!formData.lastName) errors.lastName = 'Last name is required';
+    if (!formData.email) errors.email = 'Email is required';
+    if (!formData.address) errors.address = 'Address is required';
+    if (!formData.city) errors.city = 'City is required';
 
-        // Email validation
-        if (!formData.email) {
-            errors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            errors.email = 'Please enter a valid email address';
-        }
+    // Enhanced phone validation
+    if (!formData.phone) {
+        errors.phone = 'Phone number is required';
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+        errors.phone = 'Phone number must be exactly 10 digits';
+    }
 
-        // Update formComplete state based on validation
-        setFormComplete(Object.keys(errors).length === 0);
-        return errors;
-    };
+    // Email validation
+    if (!formData.email) {
+        errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        errors.email = 'Please enter a valid email address';
+    }
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
+    // Update formComplete state based on validation
+    setFormComplete(Object.keys(errors).length === 0);
+    return errors;
+};
 
-        // Special handling for phone input
-        if (name === 'phone') {
-            // Remove any non-digit characters
-            const phoneValue = value.replace(/\D/g, '');
-            // Limit to 10 digits
-            const truncatedPhone = phoneValue.slice(0, 10);
-            setFormData(prev => ({
-                ...prev,
-                [name]: truncatedPhone
-            }));
-        } else {
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        }
+const handleInputChange = (e) => {
+    const { name, value } = e.target;
 
-        // Clear error when user starts typing
-        if (formErrors[name]) {
+    // Special handling for phone input
+    if (name === 'phone') {
+        // Remove any non-digit characters
+        const phoneValue = value.replace(/\D/g, '');
+        // Limit to 10 digits
+        const truncatedPhone = phoneValue.slice(0, 10);
+        setFormData(prev => ({
+            ...prev,
+            [name]: truncatedPhone
+        }));
+    } else {
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    }
+
+    // Clear error when user starts typing
+    if (formErrors[name]) {
+        setFormErrors(prev => ({
+            ...prev,
+            [name]: ''
+        }));
+    }
+};
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = validateForm();
+    setFormErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+        setIsSubmitting(true);
+        try {
+            setFormComplete(true);
+            setCurrentStep(2); // Update progress bar
+            setIsSubmitting(false);
+            
+            // Track potential abandoned order
+            trackAbandonedOrder();
+            
+            // Add smooth scroll to payment section
+            setTimeout(() => {
+                paymentSectionRef.current?.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        } catch (error) {
+            console.error('Form submission error:', error);
             setFormErrors(prev => ({
                 ...prev,
-                [name]: ''
+                submit: "Error validating form. Please try again."
             }));
+            setIsSubmitting(false);
         }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const errors = validateForm();
-        setFormErrors(errors);
-
-        if (Object.keys(errors).length === 0) {
-            setIsSubmitting(true);
-            try {
-                setFormComplete(true);
-                setCurrentStep(2); // Update progress bar
-                setIsSubmitting(false);
-                
-                // Add smooth scroll to payment section
-                setTimeout(() => {
-                    paymentSectionRef.current?.scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }, 100);
-            } catch (error) {
-                console.error('Form submission error:', error);
-                setFormErrors(prev => ({
-                    ...prev,
-                    submit: "Error validating form. Please try again."
-                }));
-                setIsSubmitting(false);
-            }
-        }
-    };
+    }
+};
 
 const handleRazorpayPayment = async () => {
     setIsSubmitting(true);
@@ -708,7 +755,7 @@ const handleRazorpayPayment = async () => {
         const totalAmount = orderDetails.totalAmount + SHIPPING_CHARGE;
         
         // First create order on server
-        const response = await fetch('http://localhost:5000/create-order', {
+        const response = await fetch('https://razorpaybackend-wgbh.onrender.com/create-order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -754,7 +801,7 @@ const handleRazorpayPayment = async () => {
             handler: async function (response) {
                 try {
                     // Verify payment on server
-                    const verifyResponse = await fetch('http://localhost:5000/verify-payment', {
+                    const verifyResponse = await fetch('https://razorpaybackend-wgbh.onrender.com/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -810,38 +857,41 @@ const handleRazorpayPayment = async () => {
     }
 };
 
-    const handleCodOrder = async () => {
-        setIsSubmitting(true);
-        try {
-            // Simulate processing time
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            // Create mock payment details for COD
-            const paymentDetails = {
-                id: `COD-${Date.now()}`,
-                status: 'Pending',
-                update_time: new Date().toISOString(),
-                payment_method: 'Cash On Delivery'
-            };
-            
-            onPaymentSuccess(paymentDetails);
-        } catch (error) {
-            console.error('COD processing error:', error);
-            setFormErrors(prev => ({
-                ...prev,
-                submit: "There was an error processing your order. Please try again."
-            }));
-            setIsSubmitting(false);
-        }
-    };
+const handleCodOrder = async () => {
+    setIsSubmitting(true);
+    try {
+        // Simulate processing time
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Create mock payment details for COD
+        const paymentDetails = {
+            id: `COD-${Date.now()}`,
+            status: 'Pending',
+            update_time: new Date().toISOString(),
+            payment_method: 'Cash On Delivery'
+        };
+        
+        onPaymentSuccess(paymentDetails);
+    } catch (error) {
+        console.error('COD processing error:', error);
+        setFormErrors(prev => ({
+            ...prev,
+            submit: "There was an error processing your order. Please try again."
+        }));
+        setIsSubmitting(false);
+    }
+};
 
-    const handlePaymentMethodSelect = (method) => {
-        setPaymentMethod(method);
-    };
+const handlePaymentMethodSelect = (method) => {
+    setPaymentMethod(method);
+};
 
 const onPaymentSuccess = async (order) => {
     setPaymentSuccess(true);
     setCurrentStep(3); // Update progress to final step
+    
+    // Clear any abandoned cart data since we completed the purchase
+    localStorage.removeItem('beyondSlimAbandonedCart');
     
     // Try to send confirmation email
     const emailSent = await sendOrderConfirmationEmail(order);
@@ -861,9 +911,9 @@ const onPaymentSuccess = async (order) => {
             return;
         }
 
-        // Don't overwrite the quantity from product page
-        if (orderDetails.totalAmount !== orderDetails.quantity * 10) {
-            const pricePerUnit = 10;
+        // Don't overwrite the quantity from product page - update this to use the 3990 price
+        if (orderDetails.totalAmount !== orderDetails.quantity * 3990) {
+            const pricePerUnit = 3990;
             orderDetails.totalAmount = pricePerUnit * orderDetails.quantity;
             console.log("Corrected order details:", orderDetails);
         }
