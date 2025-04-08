@@ -3,6 +3,9 @@ import nagarmotha from '../assets/nagarmotha.webp';
 import sonth from '../assets/sonth.jpg';
 import taleespatra from '../assets/taleespatra.jpg';
 import chabya from '../assets/chabya.jpg';
+import one from '../assets/blog/one.jpg'
+import two from '../assets/blog/two.jpg';
+import three from '../assets/blog/three.jpg';
 export const navigationLinks = [
     {
         id: 'About',
@@ -20,9 +23,9 @@ export const navigationLinks = [
         path: '/faq'
     },
     {
-        id: 'Checkout',
-        title: 'Checkout',
-        path: '/checkouts'
+        id: 'Blog',
+        title: 'Blog',
+        path: '/blog'  // Changed from '/blogs' to '/blog'
     },
     {
         id: 'Contact',
@@ -556,3 +559,82 @@ export const ingredients = {
     ]
 
 };
+
+export const blogData = [
+    {
+        id: 1,
+        title: "The Science Behind Natural Fat Loss",
+        excerpt: "Discover how natural ingredients can support your weight loss journey effectively and safely.",
+        image: one,
+        date: "2024-01-15",
+        category: "Weight Loss",
+        readTime: "5 min read",
+        author: "Dr. Sarah Johnson",
+        content: {
+            introduction: "Natural fat loss has been a topic of increasing interest in the health and wellness community. Understanding how natural ingredients interact with our body's metabolism is crucial for achieving sustainable weight loss results.",
+            sections: [
+                {
+                    title: "Understanding Natural Fat Loss",
+                    content: "Natural fat loss occurs when the body's metabolism is optimized through the use of natural ingredients and healthy lifestyle choices. Unlike synthetic alternatives, natural methods work in harmony with your body's systems."
+                },
+                {
+                    title: "Key Natural Ingredients",
+                    content: "Several natural ingredients have been scientifically proven to support fat loss: Green tea extract, which boosts metabolism; Ginger, which aids digestion; and various essential oils that help break down fat cells."
+                },
+                {
+                    title: "The Role of Ayurvedic Herbs",
+                    content: "Ayurvedic herbs have been used for centuries in traditional medicine to support healthy weight management. These herbs work by improving digestion, boosting metabolism, and reducing fat absorption."
+                }
+            ],
+            conclusion: "When combined with a healthy diet and regular exercise, natural fat loss solutions can provide sustainable, long-term results without the side effects often associated with synthetic alternatives."
+        }
+    },
+    {
+        id: 2,
+        title: "Top 5 Benefits of Ayurvedic Slimming Oils",
+        excerpt: "Learn about the traditional wisdom behind Ayurvedic oils and their modern applications.",
+        image: two,
+        date: "2024-01-10",
+        category: "Ayurveda",
+        readTime: "4 min read",
+        author: "Dr. Amit Patel",
+        content: {
+            introduction: "Ayurvedic slimming oils have been used for centuries in traditional medicine. Their effectiveness is backed by both ancient wisdom and modern research.",
+            sections: [
+                {
+                    title: "The Power of Natural Oils",
+                    content: "Ayurvedic oils are packed with active compounds that help reduce fat deposits and improve skin texture naturally."
+                },
+                {
+                    title: "Benefits for Modern Life",
+                    content: "These traditional formulations are perfectly suited for today's lifestyle, offering a natural solution to modern weight management challenges."
+                }
+            ],
+            conclusion: "Incorporating Ayurvedic slimming oils into your routine can provide multiple benefits for both body and mind."
+        }
+    },
+    {
+        id: 3,
+        title: "Creating a Sustainable Weight Loss Routine",
+        excerpt: "Tips and strategies for maintaining a healthy lifestyle while achieving your weight loss goals.",
+        image: three,
+        date: "2024-01-05",
+        category: "Lifestyle",
+        readTime: "6 min read",
+        author: "Emma Wilson",
+        content: {
+            introduction: "A sustainable weight loss journey is about creating habits that last a lifetime, not just following temporary diets.",
+            sections: [
+                {
+                    title: "Building Healthy Habits",
+                    content: "Learn how to create and maintain healthy habits that support your weight loss goals naturally."
+                },
+                {
+                    title: "Natural Approaches",
+                    content: "Discover how to incorporate natural solutions like Beyond Slim into your daily routine for optimal results."
+                }
+            ],
+            conclusion: "Success in weight loss comes from consistent, sustainable practices that become part of your lifestyle."
+        }
+    }
+];

@@ -613,7 +613,6 @@ const sendOrderConfirmationEmail = async (paymentDetails) => {
 };
 
 const trackAbandonedOrder = () => {
-    // Store order information in localStorage
     if (formData.email) {
         const abandonedOrderData = {
             timestamp: new Date().toISOString(),
@@ -638,19 +637,29 @@ const trackAbandonedOrder = () => {
         localStorage.setItem('beyondSlimAbandonedCart', JSON.stringify(abandonedOrderData));
         
         // If the window is about to be closed, try to send abandoned cart email
-        window.addEventListener('beforeunload', async (e) => {
+        window.addEventListener('beforeunload', (e) => {
             // Only if we've collected information but haven't completed checkout
             if (formComplete && !paymentSuccess) {
-                try {
-                    // Using navigator.sendBeacon for async request that will complete even if page closes
-                    navigator.sendBeacon('https://razorpaybackend-wgbh.onrender.com/send-abandoned-order-email', JSON.stringify({
+                // Create the request data as a Blob for the beacon API
+                const blob = new Blob([JSON.stringify({
+                    customerEmail: formData.email,
+                    orderDetails: abandonedOrderData.orderDetails,
+                    customerDetails: abandonedOrderData.customerDetails
+                })], {type: 'application/json'});
+
+                // Use fetch with keepalive instead of sendBeacon for better reliability
+                fetch('https://razorpaybackend-wgbh.onrender.com/send-abandoned-order-email', {
+                    method: 'POST',
+                    keepalive: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
                         customerEmail: formData.email,
                         orderDetails: abandonedOrderData.orderDetails,
                         customerDetails: abandonedOrderData.customerDetails
-                    }));
-                } catch (error) {
-                    console.error('Failed to send abandoned order notification', error);
-                }
+                    })
+                }).catch(error => console.error('Failed to send abandoned order notification', error));
             }
         });
     }
@@ -839,10 +848,54 @@ const handleRazorpayPayment = async () => {
                 }
             },
             modal: {
-                ondismiss: function () {
+                ondismiss: async function () {
                     setIsSubmitting(false);
+                    
+                    // Send abandoned order notification when user closes Razorpay modal
+                    const abandonedOrderData = {
+                        timestamp: new Date().toISOString(),
+                        customerDetails: {
+                            firstName: formData.firstName,
+                            lastName: formData.lastName,
+                            email: formData.email,
+                            phone: formData.phone,
+                            address: formData.address,
+                            city: formData.city,
+                            country: formData.country
+                        },
+                        orderDetails: {
+                            orderNumber: `BYD-CART-${Date.now().toString().slice(-6)}`,
+                            productName: orderDetails.productName,
+                            quantity: orderDetails.quantity,
+                            totalAmount: totalAmount.toFixed(2),
+                            currency: '₹',
+                            razorpayOrderId: orderData.order.id
+                        }
+                    };
+
+                    try {
+                        const response = await fetch('https://razorpaybackend-wgbh.onrender.com/send-abandoned-order-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                customerEmail: formData.email,
+                                orderDetails: abandonedOrderData.orderDetails,
+                                customerDetails: abandonedOrderData.customerDetails,
+                                abandonedAt: 'payment',
+                                reason: 'modal_closed'
+                            })
+                        });
+
+                        if (!response.ok) {
+                            console.error('Failed to send abandoned order notification:', await response.text());
+                        }
+                    } catch (error) {
+                        console.error('Error sending abandoned order notification:', error);
+                    }
                 }
-            }
+            },
         };
 
         const razorpay = new window.Razorpay(options);

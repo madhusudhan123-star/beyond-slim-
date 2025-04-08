@@ -24,6 +24,8 @@ import Ingredients from '../components/home/Ingredients';
 import { motion } from 'framer-motion';
 import banner from '../assets/homebanner1.jpg';
 import banner2 from '../assets/homebanner2.jpg';
+import InstagramFeed from '../components/InstagramFeed';
+import BlogPreview from '../components/home/BlogPreview';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -218,6 +220,11 @@ const Home = () => {
                 <FAQ />
             </div>
 
+            <BlogPreview />
+
+            <div>
+                <InstagramFeed />
+            </div>
         </main>
     );
 };

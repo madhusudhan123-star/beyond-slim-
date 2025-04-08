@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { LanguageProvider } from "./context/LanguageContext";
 import Home from "./pages/Home";
@@ -16,9 +16,23 @@ import Contact from "./pages/Contact";
 import About from "./pages/About"; // Make sure this import is correct
 import FAQ from "./pages/FAQ";
 import { HelmetProvider } from "react-helmet-async";
-import Checkout_two from './pages/Checkout_two'
+import Checkout_two from './pages/Checkout_two';
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import whats from './assets/whats.png';
 
 import { FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
+
+// Add this new component before AppContent
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 // Create a wrapper component that conditionally renders the navbar
 const AppContent = () => {
@@ -52,6 +66,8 @@ const AppContent = () => {
         <Route path="/privacy-policy" element={<Privacypolicy />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path='/check' element={<Checkout_two />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
       </Routes>
       
       {/* Footer and mobile buttons */}
@@ -73,14 +89,17 @@ const AppContent = () => {
 
       {/* Desktop Floating Button */}
       <button
-        onClick={handleCall}
+        // onClick={handleCall}
         className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 
                 text-white rounded-full p-4 shadow-lg transform hover:scale-110 
                 transition-all duration-300 hidden md:flex items-center justify-center
                 animate-bounce hover:animate-none group"
         aria-label="Call us"
       >
-        <FaPhoneAlt className="text-2xl group-hover:animate-wiggle" />
+         <a href="https://wa.me/919908526444" target="_blank" rel="noopener noreferrer">
+        <img src={whats} className="w-8 h-8" />
+         </a>
+        {/* <FaPhoneAlt className="text-2xl group-hover:animate-wiggle" /> */}
       </button>
     </>
   );
@@ -92,6 +111,7 @@ function App() {
       <div className="App min-h-screen">
         <HelmetProvider>
           <Router>
+            <ScrollToTop /> {/* Add this line */}
             <AppContent />
           </Router>
         </HelmetProvider>
