@@ -68,15 +68,14 @@ const Home = () => {
     return (
         <main className='relative overflow-hidden font-montserrat'>
             {/* Image Banner Header Section */}
-            <section className='min-h-[50vh] sm:min-h-[60vh] md:min-h-[70vh] lg:min-h-[80vh] relative z-20 overflow-hidden flex items-center justify-center'>
-                
-                <div className='container mx-auto px-2 sm:px-4 pt-8 sm:pt-12 md:pt-16 flex flex-col items-center justify-center relative z-10 w-full'>
+            <section className='relative z-20 mt-14 overflow-hidden'>
+                <div className='px-2 sm:px-4 pt-4 sm:pt-6 md:pt-8 relative z-10 w-full'>
                     {/* Banner Image Slider */}
                     <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1 }}
-                        className='relative w-full h-[200px] sm:h-[250px] md:h-[400px] lg:h-[500px] overflow-hidden rounded-lg shadow-lg'
+                        className='relative w-full aspect-[1280/500] max-w-7xl mx-auto overflow-hidden rounded-lg shadow-lg'
                     >
                         {bannerImages.map((img, index) => (
                             <motion.div
@@ -95,23 +94,23 @@ const Home = () => {
                                     className='w-full h-full object-cover object-center' 
                                 />
                                 
-                                {/* Optional text overlay - now with better mobile responsive text sizing */}
-                                {/* <div className='absolute inset-0 flex items-center justify-center bg-black/20'>
-                                    <h2 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center text-white w-full px-3 sm:px-6 drop-shadow-lg'>
+                                {/* Text overlay with better responsive sizing */}
+                                <div className='absolute inset-0 flex items-center justify-center bg-black/10'>
+                                    <h2 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white w-full px-3 sm:px-6 max-w-4xl mx-auto drop-shadow-lg'>
                                         {bannerTexts[index] || ''}
                                     </h2>
-                                </div> */}
+                                </div>
                             </motion.div>
                         ))}
                     </motion.div>
                     
-                    {/* Optional: Banner Navigation Dots */}
+                    {/* Banner Navigation Dots */}
                     <div className="flex justify-center mt-3 sm:mt-4">
                         {bannerImages.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => setCurrentBannerIndex(index)}
-                                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full mx-1 sm:mx-2 ${
+                                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full mx-1 sm:mx-2 transition-colors duration-300 ${
                                     currentBannerIndex === index ? 'bg-blue-600' : 'bg-gray-300'
                                 }`}
                                 aria-label={`Go to slide ${index + 1}`}

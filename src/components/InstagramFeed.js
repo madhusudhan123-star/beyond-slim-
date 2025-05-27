@@ -13,7 +13,7 @@ const InstagramFeed = () => {
                     <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                         Follow Us on Instagram
                     </h2>
-                    <p className="text-gray-600 text-lg">@drjointsofficial</p>
+                    <p className="text-gray-600 text-lg">@beyondslimmingoil</p>
                 </div>
 
                 {/* Instagram Widget */}
@@ -29,7 +29,7 @@ const InstagramFeed = () => {
                 {/* Follow Button */}
                 <div className="text-center">
                     <a
-                        href="https://www.instagram.com/beyondslimmingoil"
+                        href="https://www.instagram.com/beyondslimmingoil?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 
@@ -37,7 +37,7 @@ const InstagramFeed = () => {
                                  transition-all duration-300 font-medium text-lg"
                     >
                         <span className="text-2xl">📸</span>
-                        Follow @drjointsofficial
+                        Follow @beyondslimmingoil
                         <span className="animate-bounce">→</span>
                     </a>
                 </div>

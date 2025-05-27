@@ -20,24 +20,16 @@ import Checkout_two from './pages/Checkout_two';
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import whats from './assets/whats.png';
+import Landing from './pages/Landing'
 
 import { FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 
-// Add this new component before AppContent
-const ScrollToTop = () => {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-};
-
-// Create a wrapper component that conditionally renders the navbar
 const AppContent = () => {
   const location = useLocation();
-  const isCheckoutPage = location.pathname === "/checkout";
+  const pathname = location.pathname;
+
+  const isCheckoutPage = pathname === "/checkout";
+  const isLandingPage = pathname === "/beyondslim"; // <- New condition
 
   const handleCall = () => {
     window.location.href = 'tel:+919908526444';
@@ -49,9 +41,9 @@ const AppContent = () => {
 
   return (
     <>
-      {/* Only render NavbarComponent if not on checkout page */}
-      {!isCheckoutPage && <NavbarComponent />}
-      
+      {/* Only render NavbarComponent if not on checkout or landing page */}
+      {!isCheckoutPage && !isLandingPage && <NavbarComponent />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -65,22 +57,23 @@ const AppContent = () => {
         <Route path="/terms" element={<TermsCondition />} />
         <Route path="/privacy-policy" element={<Privacypolicy />} />
         <Route path="/faq" element={<FAQ />} />
-        <Route path='/check' element={<Checkout_two />} />
+        <Route path="/check" element={<Checkout_two />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:id" element={<BlogPost />} />
+        <Route path="/beyondslim" element={<Landing />} />
       </Routes>
-      
-      {/* Footer and mobile buttons */}
-      {<Footer />}
+
+      {/* Only show footer if not on landing page */}
+      {!isLandingPage && <Footer />}
 
       {/* Mobile Fixed Bottom Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 
-                    flex justify-around items-center py-3 px-4 space-x-4">
+                      flex justify-around items-center py-3 px-4 space-x-4">
         <button
           onClick={handleCall}
           className="flex-1 bg-green-500 text-white py-2 px-4 rounded-full 
-                  flex items-center justify-center space-x-2 shadow-md
-                  active:scale-95 transition-transform"
+                    flex items-center justify-center space-x-2 shadow-md
+                    active:scale-95 transition-transform"
         >
           <FaPhoneAlt className="text-lg" />
           <span className="text-sm font-medium">Call Now</span>
@@ -89,21 +82,106 @@ const AppContent = () => {
 
       {/* Desktop Floating Button */}
       <button
-        // onClick={handleCall}
         className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 
-                text-white rounded-full p-4 shadow-lg transform hover:scale-110 
-                transition-all duration-300 hidden md:flex items-center justify-center
-                animate-bounce hover:animate-none group"
+                  text-white rounded-full p-4 shadow-lg transform hover:scale-110 
+                  transition-all duration-300 hidden md:flex items-center justify-center
+                  animate-bounce hover:animate-none group"
         aria-label="Call us"
       >
-         <a href="https://wa.me/919908526444" target="_blank" rel="noopener noreferrer">
-        <img src={whats} className="w-8 h-8" />
-         </a>
-        {/* <FaPhoneAlt className="text-2xl group-hover:animate-wiggle" /> */}
+        <a href="https://wa.me/919908526444" target="_blank" rel="noopener noreferrer">
+          <img src={whats} className="w-8 h-8" />
+        </a>
       </button>
     </>
   );
 };
+
+
+
+
+
+// // Add this new component before AppContent
+// const ScrollToTop = () => {
+//   const { pathname } = useLocation();
+
+//   useEffect(() => {
+//     window.scrollTo(0, 0);
+//   }, [pathname]);
+
+//   return null;
+// };
+
+// // Create a wrapper component that conditionally renders the navbar
+// const AppContent = () => {
+//   const location = useLocation();
+//   const isCheckoutPage = location.pathname === "/checkout";
+
+//   const handleCall = () => {
+//     window.location.href = 'tel:+919908526444';
+//   };
+
+//   const handleWhatsApp = () => {
+//     window.location.href = 'https://wa.me/+919908526444';
+//   };
+
+//   return (
+//     <>
+//       {/* Only render NavbarComponent if not on checkout page */}
+//       {!isCheckoutPage && <NavbarComponent />}
+      
+//       <Routes>
+//         <Route path="/" element={<Home />} />
+//         <Route path="/about" element={<About />} />
+//         <Route path="/product" element={<Product />} />
+//         <Route path="/contact" element={<Contact />} />
+//         <Route path="/checkout" element={<Checkout />} />
+//         <Route path="/checkouts" element={<Checkouts />} />
+//         <Route path="/cancel" element={<Cancel />} />
+//         <Route path="/shipping" element={<Shipping />} />
+//         <Route path="/return-policy" element={<ReturnPolicy />} />
+//         <Route path="/terms" element={<TermsCondition />} />
+//         <Route path="/privacy-policy" element={<Privacypolicy />} />
+//         <Route path="/faq" element={<FAQ />} />
+//         <Route path='/check' element={<Checkout_two />} />
+//         <Route path="/blog" element={<Blog />} />
+//         <Route path="/blog/:id" element={<BlogPost />} />
+//         <Route path="/beyondslim" element= {<Landing />} />
+//       </Routes>
+      
+//       {/* Footer and mobile buttons */}
+//       {<Footer />}
+
+//       {/* Mobile Fixed Bottom Bar */}
+//       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg z-50 
+//                     flex justify-around items-center py-3 px-4 space-x-4">
+//         <button
+//           onClick={handleCall}
+//           className="flex-1 bg-green-500 text-white py-2 px-4 rounded-full 
+//                   flex items-center justify-center space-x-2 shadow-md
+//                   active:scale-95 transition-transform"
+//         >
+//           <FaPhoneAlt className="text-lg" />
+//           <span className="text-sm font-medium">Call Now</span>
+//         </button>
+//       </div>
+
+//       {/* Desktop Floating Button */}
+//       <button
+//         // onClick={handleCall}
+//         className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 
+//                 text-white rounded-full p-4 shadow-lg transform hover:scale-110 
+//                 transition-all duration-300 hidden md:flex items-center justify-center
+//                 animate-bounce hover:animate-none group"
+//         aria-label="Call us"
+//       >
+//          <a href="https://wa.me/919908526444" target="_blank" rel="noopener noreferrer">
+//         <img src={whats} className="w-8 h-8" />
+//          </a>
+//         {/* <FaPhoneAlt className="text-2xl group-hover:animate-wiggle" /> */}
+//       </button>
+//     </>
+//   );
+// };
 
 function App() {
   return (
@@ -111,7 +189,7 @@ function App() {
       <div className="App min-h-screen">
         <HelmetProvider>
           <Router>
-            <ScrollToTop /> {/* Add this line */}
+            {/* <ScrollToTop /> */}
             <AppContent />
           </Router>
         </HelmetProvider>
@@ -121,3 +199,5 @@ function App() {
 }
 
 export default App;
+
+
