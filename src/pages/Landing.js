@@ -819,8 +819,9 @@ const Landing = () => {
                         
                         {/* Product description */}
                         <div className="mt-4 text-gray-600">
-                          <p>Beyond Slim is a revolutionary Ayurvedic slimming oil specially formulated to help reduce stubborn belly fat, tone your skin, and enhance your natural beauty. It works by improving skin elasticity, reducing fat deposits, and giving you a more confident, sculpted appearance. With regular use, it supports healthy weight management and helps you achieve your body goals naturally without harsh chemicals or side effects.</p>
-                          <p className='mt-3'>డా. జాయింట్స్ ఆయిల్ మోకాలి, వెన్ను, భుజం, మెడ నొప్పులను సహజంగా తగ్గించి, మీ రోజువారీ జీవితాన్ని సుఖంగా మార్చుతుంది</p>
+                          <p className='mt-3'>బరువు తగ్గించాలన్న ప్రతి ప్రయత్నంలో మీకు తోడుగా నిలిచే ఆయిల్ – బియాండ్ స్లిమ్ ఆయిల్.</p>
+                          <p className='mt-3'>ನೀವು ತುಕ ಕಡಿಮೆ ಮಾಡಲು ಎಷ್ಟೇ ಪ್ರಯತ್ನ ಪಟ್ಟರು ತುಕ ಕಡಿಮೆ ಮಾಡಲು ಆಗುತ್ತಿಲ್ಲವೇ ಹಾಗಾದರೆ ನಿಮಗಾಗಿ ಇಲ್ಲಿದೆ ಬಿಯೊಂಡ್ ಸ್ಲಿಮ ಆಯಿಲ ಆಯುರ್ವೇದ ಶಕ್ತಿಯುತ ಸ್ವಭಾವಿಕ ಘಟಕಗಳೊಂದಿಗೆ ಸಂಯೋಜಿತವಾಗಿರುವ ಈ ಎಣ್ಣೆ ನಿಮ್ಮ ಕೊಬ್ಬನು ಕರಗಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ ಮತ್ತು ದೇಹವನ್ನು ನೈಸರ್ಗಿಕವಾಗಿ ಟೋನ್ ಮಾಡುತ್ತದೆ, ನೀವು ಪ್ರಾರಂಭ ಹಂತದಲ್ಲಿರುವಿರಾ ಅಥವಾ ನಿಮ್ಮ ದೇಹವನ್ನು ಬಲಪಡಿಸಿಕೊಳ್ಳಬೇಕೆಂದರೆ ಇಲ್ಲಿದೆ ಬಿಯೊಂಡ್ ಸ್ಲಿಮ್ ಆಯಿಲ್ ಅನ್ನು ನಿಮ್ಮ ದೈನಂದಿನ ಆರೈಕೆಯ ಭಾಗವನ್ನಾಗಿ ಮಾಡಿ ಅಂತರವನ್ನು ಅನುಭವಿಸಿ.</p>
+                          <p className='mt-3'>No matter where you are in your weight loss journey, Beyond Slim Oil is here to support you at every step. Formulated with powerful natural ingredients, this Ayurvedic oil is designed to enhance fat breakdown, improve metabolism, and help tone your body naturally. Whether you're just starting out or looking to boost your current routine, make Beyond Slim Oil a part of your daily wellness ritual and feel the difference from within.</p>
                         </div>
                         
                         {/* Key features list */}

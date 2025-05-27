@@ -81,7 +81,7 @@ const AppContent = () => {
       </div>
 
       {/* Desktop Floating Button */}
-      <button
+      {/* <button
         className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 
                   text-white rounded-full p-4 shadow-lg transform hover:scale-110 
                   transition-all duration-300 hidden md:flex items-center justify-center
@@ -91,7 +91,7 @@ const AppContent = () => {
         <a href="https://wa.me/919908526444" target="_blank" rel="noopener noreferrer">
           <img src={whats} className="w-8 h-8" />
         </a>
-      </button>
+      </button> */}
     </>
   );
 };
