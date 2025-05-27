@@ -1000,6 +1000,138 @@ const Landing = () => {
           </Swiper>
         </section>
 
+        {/* How It Works Section */}
+        <section className="mt-20 mb-16 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+                How Beyond Slim Works
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                Our scientifically formulated oil works in 3 simple steps to transform your body naturally
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* Step 1 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-8 text-white text-center transform hover:scale-105 transition-all duration-300 shadow-xl">
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg shadow-lg">
+                    1
+                  </div>
+                  <div className="text-6xl mb-4">🌿</div>
+                  <h3 className="text-xl font-bold mb-3">Apply & Massage</h3>
+                  <p className="text-blue-100">Apply 2-3 drops on target areas and massage gently in circular motions for 5-10 minutes</p>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl p-8 text-white text-center transform hover:scale-105 transition-all duration-300 shadow-xl">
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white text-green-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg shadow-lg">
+                    2
+                  </div>
+                  <div className="text-6xl mb-4">⚡</div>
+                  <h3 className="text-xl font-bold mb-3">Penetrates Deep</h3>
+                  <p className="text-green-100">Active ingredients penetrate deep into skin layers, targeting fat cells and improving circulation</p>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="relative">
+                <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl p-8 text-white text-center transform hover:scale-105 transition-all duration-300 shadow-xl">
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-white text-orange-600 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg shadow-lg">
+                    3
+                  </div>
+                  <div className="text-6xl mb-4">✨</div>
+                  <h3 className="text-xl font-bold mb-3">See Results</h3>
+                  <p className="text-orange-100">Notice visible reduction in fat deposits and improved skin tone within 2-3 weeks of regular use</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="mt-20 mb-16 px-4 bg-gray-50 py-16">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                Get answers to the most common questions about Beyond Slim
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {/* FAQ Item 1 */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  How long does it take to see results?
+                </h3>
+                <p className="text-gray-600">
+                  Most customers notice improvements in skin texture within the first week. Visible inch loss typically becomes apparent after 2-3 weeks of consistent use. For best results, we recommend using Beyond Slim for at least 8 weeks.
+                </p>
+              </div>
+
+              {/* FAQ Item 2 */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  Is Beyond Slim safe for all skin types?
+                </h3>
+                <p className="text-gray-600">
+                  Yes! Beyond Slim is formulated with 100% natural ingredients and is suitable for all skin types. However, if you have sensitive skin or any allergies, we recommend doing a patch test before full application.
+                </p>
+              </div>
+
+              {/* FAQ Item 3 */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  How do I use Beyond Slim for best results?
+                </h3>
+                <p className="text-gray-600">
+                  Apply 2-3 drops to the target area twice daily (morning and evening). Massage in circular motions for 5-10 minutes until fully absorbed. For enhanced results, combine with a healthy diet and regular exercise.
+                </p>
+              </div>
+
+              {/* FAQ Item 4 */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  What if I'm not satisfied with the results?
+                </h3>
+                <p className="text-gray-600">
+                  We offer a 15-day money-back guarantee. If you're not completely satisfied with your results, simply contact our customer service team for a full refund. Your satisfaction is our priority.
+                </p>
+              </div>
+
+              {/* FAQ Item 6 */}
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-3">
+                  How long does one bottle last?
+                </h3>
+                <p className="text-gray-600">
+                  One bottle of Beyond Slim typically lasts 4-6 weeks with regular use (twice daily). For optimal results and better value, we recommend our 3-bottle package which provides a complete 3-month transformation program.
+                </p>
+              </div>
+            </div>
+
+            <div className="text-center mt-12">
+              <p className="text-gray-600 mb-4">Still have questions?</p>
+              <a 
+                href="tel:+919908030111"
+                onClick={handleCallClick}
+                className="inline-flex items-center justify-center gap-2 bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                Call Us: 9908030111
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Trust Badges Section */}
         <div className="mt-16 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
