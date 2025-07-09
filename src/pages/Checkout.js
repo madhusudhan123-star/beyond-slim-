@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import data from '../utility/data';
-import { FaLock, FaShieldAlt, FaCreditCard, FaPaypal, FaCheckCircle, FaRegCreditCard, FaCcPaypal } from 'react-icons/fa';
+import { FaLock, FaShieldAlt, FaCreditCard, FaCheckCircle, FaRegCreditCard } from 'react-icons/fa';
 import { SiRazorpay } from 'react-icons/si';
 import {Helmet} from 'react-helmet-async'
 import logo from '../assets/logo.png'; // Ensure the logo file path is correct
+import { generateOrderNumber } from '../schemas';
 
 // Add Google Fonts import to index.html or add this at the top of your component
 // This ensures the component uses better fonts
@@ -331,12 +332,14 @@ const PaymentMethodSelector = ({ selectedMethod, onSelect }) => {
 };
 
 const Checkout = () => {
-    const paypalRef = useRef(null);
     const location = useLocation();
     const navigate = useNavigate();
     const { language } = useLanguage();
     const checkoutData = data[language].checkout;
-    const orderDetails = location.state || { productName: 'Product', quantity: 1, totalAmount: 3990 };
+    const orderDetails = useMemo(() => 
+        location.state || { productName: 'Product', quantity: 1, totalAmount: 3990 }, 
+        [location.state]
+    );
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [formComplete, setFormComplete] = useState(false);
@@ -520,8 +523,8 @@ const Checkout = () => {
 
 const sendOrderConfirmationEmail = async (paymentDetails) => {
     try {
-        // Generate a unique order number
-        const orderNumber = `BYD-${Date.now().toString().slice(-6)}-${Math.floor(Math.random() * 1000)}`;
+        // Generate a unique order number using schema helper
+        const orderNumber = generateOrderNumber();
         
         // Create order details object
         const orderDetailsForEmail = {
@@ -640,13 +643,6 @@ const trackAbandonedOrder = () => {
         window.addEventListener('beforeunload', (e) => {
             // Only if we've collected information but haven't completed checkout
             if (formComplete && !paymentSuccess) {
-                // Create the request data as a Blob for the beacon API
-                const blob = new Blob([JSON.stringify({
-                    customerEmail: formData.email,
-                    orderDetails: abandonedOrderData.orderDetails,
-                    customerDetails: abandonedOrderData.customerDetails
-                })], {type: 'application/json'});
-
                 // Use fetch with keepalive instead of sendBeacon for better reliability
                 fetch('https://razorpaybackend-wgbh.onrender.com/send-abandoned-order-email', {
                     method: 'POST',
@@ -952,7 +948,33 @@ const onPaymentSuccess = async (order) => {
     if (!emailSent) {
         console.warn("Failed to send confirmation email");
     }
-};
+
+    // Prepare order data for thank you page
+    const orderData = {
+        orderNumber: generateOrderNumber(),
+        orderDate: new Date().toLocaleDateString('en-IN'),
+        productName: orderDetails.productName,
+        quantity: orderDetails.quantity,
+        totalAmount: orderDetails.totalAmount + SHIPPING_CHARGE,
+        paymentMethod: order.payment_method || (order.method === 'cod' ? 'Cash on Delivery' : 'Online Payment'),
+        transactionId: order.id || order.transactionId || 'COD-' + Date.now(),
+        customerName: `${formData.firstName} ${formData.lastName}`,
+        customerEmail: formData.email,
+        customerPhone: formData.phone,
+        shippingAddress: `${formData.address}\n${formData.city}, ${formData.country}`
+    };
+
+        // Store order data for thank you page
+        localStorage.setItem('beyondSlimOrderSuccess', JSON.stringify(orderData));
+        
+        // Navigate to thank you page after a short delay
+        setTimeout(() => {
+            navigate('/thank-you', { 
+                state: orderData,
+                replace: true 
+            });
+        }, 2000); // 2 second delay to show success state
+    };
 
     useEffect(() => {
         if (location.state) {
@@ -984,7 +1006,7 @@ const onPaymentSuccess = async (order) => {
             addPayPalScript();
         }
         */
-    }, [orderDetails, navigate, formComplete]);
+    }, [orderDetails, navigate, formComplete, location.state]);
 
     useEffect(() => {
         if (formComplete) {
@@ -1478,14 +1500,13 @@ const onPaymentSuccess = async (order) => {
                         <p className="text-gray-600 mb-6 max-w-md mx-auto leading-relaxed">
                             {checkoutData.successMessage.description} We've sent a confirmation email with your order details.
                         </p>
-                        <button
-                            onClick={() => navigate('/')}
-                            className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors
-                                      shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 
-                                      font-medium tracking-wide"
-                        >
-                            {checkoutData.successMessage.buttonText}
-                        </button>
+                        <div className="flex items-center justify-center mb-4">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600 mr-2"></div>
+                            <span className="text-gray-600">Redirecting to order confirmation...</span>
+                        </div>
+                        <p className="text-sm text-gray-500">
+                            You'll be automatically redirected in a few seconds
+                        </p>
                     </div>
                 </div>
             )}

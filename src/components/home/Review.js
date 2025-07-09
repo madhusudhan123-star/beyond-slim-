@@ -21,7 +21,7 @@ const Review = () => {
                 <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full translate-x-1/3 translate-y-1/3"></div>
             </div>
             
-            <div className="container mx-auto px-4 relative z-10">
+            <div className="px-4 relative z-10">
                 <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}

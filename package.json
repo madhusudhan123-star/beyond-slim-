@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@studio-freight/lenis": "^1.0.42",
+    "canvas-confetti": "^1.9.3",
     "cra-template": "1.2.0",
     "framer-motion": "^12.6.2",
     "gsap": "^3.12.7",

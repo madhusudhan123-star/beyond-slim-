@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import product from '../assets/about_product.png';
 import { productPage } from '../utility/data';
-import { FaShieldAlt, FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaTruck, FaUndo, FaCreditCard, FaQuestion } from 'react-icons/fa';
+import { FaShieldAlt, FaStar, FaStarHalfAlt, FaRegStar, FaCheck, FaTruck, FaUndo } from 'react-icons/fa';
+import amazon from '../assets/amazon.webp'; 
+import cart from '../assets/cart.png';
+import banner from '../assets/homebanner1.jpg';
+import { getProductBySlug, productSlugs } from '../utils/urlSlugs';
+import { Helmet } from 'react-helmet-async';
 
 const Product = () => {
     const navigate = useNavigate();
+    const { slug } = useParams();
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('description');
-    const [showFaq, setShowFaq] = useState({});
     const [mounted, setMounted] = useState(false);
+
+    // Get product data based on slug
+    const productData = slug ? getProductBySlug(slug) : productSlugs['beyond-slim-capsules'];
+    const seoData = productData || productSlugs['beyond-slim-capsules'];
 
     useEffect(() => {
         setMounted(true);
@@ -23,23 +32,8 @@ const Product = () => {
             totalAmount: price * quantity,
         };
 
-        navigate('/checkout', { state: productDetails });
+        navigate('/secure-checkout', { state: productDetails });
     };
-
-    const toggleFaq = (id) => {
-        setShowFaq(prev => ({
-            ...prev,
-            [id]: !prev[id]
-        }));
-    };
-
-    // Product benefits data
-    const benefits = [
-        { icon: 'weight', title: 'Weight Management', description: 'Supports healthy weight loss when used as directed' },
-        { icon: 'energy', title: 'Decreased Weight', description: 'Natural energy boost without jitters or crash' },
-        { icon: 'metabolism', title: 'Metabolic Support', description: 'Helps optimize your body\'s metabolic function' },
-        { icon: 'natural', title: '100% Natural', description: 'Made with natural ingredients, no harmful chemicals' }
-    ];
 
     // Product specifications
     const specifications = [
@@ -49,25 +43,6 @@ const Product = () => {
         { name: 'Container Size', value: '60 capsules' },
         { name: 'Manufactured In', value: 'USA in GMP-certified facility' },
         { name: 'Certifications', value: 'FDA Registered Facility, Non-GMO' }
-    ];
-
-    // FAQ data
-    const faqs = [
-        { 
-            id: 1, 
-            question: 'How long does it take to see results?', 
-            answer: 'Most customers report seeing initial results within 2-3 weeks when used as directed alongside a balanced diet. Individual results may vary.' 
-        },
-        { 
-            id: 2, 
-            question: 'Are there any side effects?', 
-            answer: 'Our product is made with natural ingredients and is generally well-tolerated. Some individuals may experience mild digestive discomfort when first starting. Consult with your healthcare provider before starting any supplement regimen.' 
-        },
-        { 
-            id: 3, 
-            question: 'Is this product suitable for vegetarians?', 
-            answer: 'Yes, our product is vegetarian-friendly and contains no animal-derived ingredients.' 
-        },
     ];
 
     // Customer reviews
@@ -100,10 +75,25 @@ const Product = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white overflow-hidden">
+        <>
+            <Helmet>
+                <title>{seoData.metaTitle}</title>
+                <meta name="description" content={seoData.metaDescription} />
+                {seoData.keywords && (
+                    <meta name="keywords" content={seoData.keywords.join(', ')} />
+                )}
+            </Helmet>
+            
+            <div className="min-h-screen bg-white overflow-hidden">
+            <Helmet>
+                <title>{seoData.title} - Your Trusted Health Partner</title>
+                <meta name="description" content={seoData.description} />
+                <link rel="canonical" href={`https://www.yourwebsite.com/product/${slug}`} />
+            </Helmet>
+            
             <section className={`relative w-full min-h-screen bg-transparent transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
                 {/* Hero Section */}
-                <div className="w-full pt-28 pb-16 bg-gradient-to-b from-blue-50 to-white shadow-sm">
+                <div className="w-full pt-28 pb-16 shadow-sm">
                     <div className="container mx-auto px-4 md:px-8">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                             {/* Product Image Section */}
@@ -117,16 +107,6 @@ const Product = () => {
                                         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
                                                  w-full h-full object-cover drop-shadow-xl"
                                     />
-                                    
-                                    {/* New: Sale badge */}
-                                    <div className="absolute -top-4 -right-4 bg-red-500 text-white text-sm font-bold rounded-full w-16 h-16 flex items-center justify-center shadow-lg transform rotate-12">
-                                        SALE
-                                    </div>
-                                    
-                                    {/* New: Authentic badge */}
-                                    <div className="absolute -bottom-3 right-0 bg-blue-700 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center">
-                                        <FaShieldAlt className="mr-1" /> 100% Authentic
-                                    </div>
                                 </div>
                             </div>
                             
@@ -178,31 +158,52 @@ const Product = () => {
                                 </div>
                                 
                                 {/* Buy Now Section */}
-                                <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
-                                    <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                                <div className="flex flex-col gap-4 mb-4">
+                                    <div className="flex flex-wrap gap-5">
+                                        <div className="flex items-center overflow-hidden w-fit mx-auto md:mx-0">
+                                            <button
+                                                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                                                className="bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
+                                            >
+                                                -
+                                            </button>
+                                            <span className="px-6 py-2 font-medium text-gray-800">{quantity}</span>
+                                            <button
+                                                onClick={() => setQuantity(prev => prev + 1)}
+                                                className="bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <a
+                                                href="https://www.amazon.in/dp/B0F44432PP"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="Amazon flex-1 text-black text-2xl px-6 py-3 
+                                                        rounded-lg transition-all duration-300
+                                                        transform hover:scale-105 shadow-lg hover:shadow-xl font-bold flex gap-4 items-center justify-center">
+                                                <img 
+                                                    src={amazon}
+                                                    alt="Amazon" 
+                                                    className="w-14"
+                                                />
+                                                AVALIABLE ON AMAZON
+                                            </a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex flex-col sm:flex-row gap-3">
                                         <button
-                                            onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                                            className="bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
+                                            onClick={handleAddToCart}
+                                            className="flex-1 bg-white text-black text-lg px-6 py-3 
+                                                    rounded-lg transition-all duration-300
+                                                    transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center"
                                         >
-                                            -
-                                        </button>
-                                        <span className="px-6 py-2 font-medium text-gray-800">{quantity}</span>
-                                        <button
-                                            onClick={() => setQuantity(prev => prev + 1)}
-                                            className="bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition"
-                                        >
-                                            +
+                                            <img src={cart} alt="Cart" className="mr-2" />
+                                            {productPage.buttons.addToCart}
                                         </button>
                                     </div>
-                                    <button
-                                        onClick={handleAddToCart}
-                                        className="flex-1 bg-blue-600 text-white text-lg px-8 py-3 
-                                                rounded-lg hover:bg-blue-700 transition-all duration-300
-                                                transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center"
-                                    >
-                                        <FaCreditCard className="mr-2" />
-                                        {productPage.buttons.addToCart}
-                                    </button>
                                 </div>
                                 
                                 {/* Guarantee Banner */}
@@ -231,9 +232,36 @@ const Product = () => {
                     </div>
                 </div>
 
+                {/* Trust Banner */}
+                {/* <div className="bg-blue-700 text-white py-12">
+                    <div className="container mx-auto px-4 text-center">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-8">Trusted by Over 50,000+ Satisfied Customers</h2>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                            <div className="flex flex-col items-center">
+                                <div className="text-4xl font-bold mb-2">4.8/5</div>
+                                <div className="flex mb-1">
+                                    {renderStars(4.8)}
+                                </div>
+                                <div className="text-sm opacity-90">Average Rating</div>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div className="text-4xl font-bold mb-2">15</div>
+                                <div className="text-sm opacity-90">Day Guarantee</div>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div className="text-4xl font-bold mb-2">24/7</div>
+                                <div className="text-sm opacity-90">Customer Support</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> */}
+
+                <div>
+                    <img src={banner} alt="Beyond Slim Banner" className='w-full h-auto' />
+                </div>
                 
                 {/* Content Tabs Section */}
-                <div className="bg-blue-50 py-16">
+                <div className=" py-16">
                     <div className="container mx-auto px-4">
                         <div className="flex border-b border-gray-300 mb-8">
                             <button 
@@ -365,73 +393,9 @@ const Product = () => {
                         )}
                     </div>
                 </div>
-                
-                {/* FAQ Section */}
-                <div className="bg-white py-16">
-                    <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">
-                            Frequently Asked Questions
-                        </h2>
-                        <p className="text-center text-gray-600 mb-12">
-                            Everything you need to know about Beyond Slim
-                        </p>
-                        
-                        <div className="max-w-3xl mx-auto space-y-4">
-                            {faqs.map(faq => (
-                                <div key={faq.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                                    <button 
-                                        className="w-full flex justify-between items-center p-4 text-left font-medium text-gray-800 hover:bg-gray-50"
-                                        onClick={() => toggleFaq(faq.id)}
-                                    >
-                                        <div className="flex items-center">
-                                            <FaQuestion className="text-blue-600 mr-3" />
-                                            {faq.question}
-                                        </div>
-                                        <svg 
-                                            className={`w-5 h-5 text-gray-500 transform transition-transform ${showFaq[faq.id] ? 'rotate-180' : ''}`} 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            stroke="currentColor"
-                                        >
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </button>
-                                    {showFaq[faq.id] && (
-                                        <div className="p-4 bg-gray-50 border-t border-gray-200">
-                                            <p className="text-gray-700">{faq.answer}</p>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                
-                {/* Trust Banner */}
-                <div className="bg-blue-700 text-white py-12">
-                    <div className="container mx-auto px-4 text-center">
-                        <h2 className="text-2xl md:text-3xl font-bold mb-8">Trusted by Over 50,000+ Satisfied Customers</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                            <div className="flex flex-col items-center">
-                                <div className="text-4xl font-bold mb-2">4.8/5</div>
-                                <div className="flex mb-1">
-                                    {renderStars(4.8)}
-                                </div>
-                                <div className="text-sm opacity-90">Average Rating</div>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <div className="text-4xl font-bold mb-2">15</div>
-                                <div className="text-sm opacity-90">Day Guarantee</div>
-                            </div>
-                            <div className="flex flex-col items-center">
-                                <div className="text-4xl font-bold mb-2">24/7</div>
-                                <div className="text-sm opacity-90">Customer Support</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </section>
         </div>
+        </>
     );
 };
 

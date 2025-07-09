@@ -35,12 +35,12 @@ const NavbarComponent = () => {
             color: '#e1306c', 
             label: 'Instagram' 
         },
-        { 
-            icon: <FaWhatsapp />, 
-            link: 'https://wa.me/+919908526444',
-            color: '#25D366', 
-            label: 'WhatsApp' 
-        }
+        // { 
+        //     icon: <FaWhatsapp />, 
+        //     link: 'https://wa.me/+919908526444',
+        //     color: '#25D366', 
+        //     label: 'WhatsApp' 
+        // }
     ];
 
     // Close mobile menu when clicking outside
@@ -119,7 +119,7 @@ const NavbarComponent = () => {
                     </div>
 
                     {/* Right Social Icons */}
-                    <div className="hidden md:flex items-center space-x-2">
+                    {/* <div className="hidden md:flex items-center space-x-2">
                         {socialIcons.map((item, index) => (
                             <motion.a 
                                 key={index} 
@@ -143,7 +143,7 @@ const NavbarComponent = () => {
                                 {item.icon}
                             </motion.a>
                         ))}
-                    </div>
+                    </div> */}
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden">

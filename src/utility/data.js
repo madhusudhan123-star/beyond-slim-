@@ -8,29 +8,24 @@ import two from '../assets/blog/two.jpg';
 import three from '../assets/blog/three.jpg';
 export const navigationLinks = [
     {
-        id: 'About',
-        title: 'About Us',
-        path: '/about'
-    },
-    {
         id: 'Order',
         title: 'Order Now',
-        path: '/product'
+        path: '/products'
     },
     {
         id: 'FAQ',
         title: 'FAQ',
-        path: '/faq'
+        path: '/frequently-asked-questions'
     },
     {
         id: 'Blog',
         title: 'Blog',
-        path: '/blog'  // Changed from '/blogs' to '/blog'
+        path: '/health-blog'
     },
     {
         id: 'Contact',
         title: 'Contact Us',
-        path: '/contact'
+        path: '/contact-us'
     }
 ];
 
@@ -185,10 +180,11 @@ export const footerData = {
             title: "Explore",
             links: [
                 { text: "Home", href: "/" },
-                { text: "Product", href: "/product" },
-                { text: "Contact Us", href: "/contact" },
-                { text: "FAQ", href: "/faq" }
-
+                { text: "Products", href: "/products" },
+                { text: "About Us", href: "/about-us" },
+                { text: "Health Blog", href: "/health-blog" },
+                { text: "Contact Us", href: "/contact-us" },
+                { text: "FAQ", href: "/frequently-asked-questions" }
             ]
         },
         {
@@ -481,7 +477,8 @@ export const ENGLISH = {
     },
 };
 
-export default { ENGLISH };
+const data = { ENGLISH };
+export default data;
 
 export const productPage = {
     title: "Beyond Slim: Redefining Beauty and Health",

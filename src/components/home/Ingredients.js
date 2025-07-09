@@ -39,7 +39,7 @@ const IngredientCard = ({ title, description, image, index }) => {
 const Ingredients = () => {
     return (
         <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 to-black py-20 px-4 md:px-8">
-            <div className="container mx-auto max-w-6xl">
+            <div className="">
                 <motion.h1 
                     initial={{ opacity: 0, y: -20 }}
                     whileInView={{ opacity: 1, y: 0 }}

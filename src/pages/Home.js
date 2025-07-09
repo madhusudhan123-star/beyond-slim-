@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Trust from '../components/home/Trust';
-import Navbar from '../components/Navbar';
 import { header, why } from '../utility/data';
-import { TypeAnimation } from 'react-type-animation';
 import Second from '../components/home/Second';
 import Review from '../components/home/Review';
 import Work from '../components/home/Work';
@@ -19,10 +16,12 @@ import three from '../assets/t_three.svg';
 import four from '../assets/t_four.png';
 import five from '../assets/hala.png';
 import six from '../assets/t_six.png';
-import logos from '../assets/logo512.png'
+import seven from '../assets/t_seven.png';
+import eight from '../assets/t_eight.png';
+import nine from '../assets/t_nine.png';
 import Ingredients from '../components/home/Ingredients';
 import { motion } from 'framer-motion';
-import banner from '../assets/homebanner1.jpg';
+import banner from '../assets/homebanner3.jpg';
 import banner2 from '../assets/homebanner2.jpg';
 import InstagramFeed from '../components/InstagramFeed';
 import BlogPreview from '../components/home/BlogPreview';
@@ -68,14 +67,14 @@ const Home = () => {
     return (
         <main className='relative overflow-hidden font-montserrat'>
             {/* Image Banner Header Section */}
-            <section className='relative z-20 mt-14 overflow-hidden'>
-                <div className='px-2 sm:px-4 pt-4 sm:pt-6 md:pt-8 relative z-10 w-full'>
+            <section className='relative z-20 mt-20 md:mt-16 overflow-hidden'>
+                <div className='relative z-10 w-full'>
                     {/* Banner Image Slider */}
                     <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1 }}
-                        className='relative w-full aspect-[1280/500] max-w-7xl mx-auto overflow-hidden rounded-lg shadow-lg'
+                        className='relative w-full aspect-[1280/500] mx-auto overflow-hidden'
                     >
                         {bannerImages.map((img, index) => (
                             <motion.div
@@ -93,101 +92,98 @@ const Home = () => {
                                     alt={`Banner ${index + 1}`}
                                     className='w-full h-full object-cover object-center' 
                                 />
-                                
-                                {/* Text overlay with better responsive sizing */}
-                                <div className='absolute inset-0 flex items-center justify-center bg-black/10'>
-                                    <h2 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white w-full px-3 sm:px-6 max-w-4xl mx-auto drop-shadow-lg'>
-                                        {bannerTexts[index] || ''}
-                                    </h2>
-                                </div>
                             </motion.div>
                         ))}
                     </motion.div>
-                    
-                    {/* Banner Navigation Dots */}
-                    <div className="flex justify-center mt-3 sm:mt-4">
-                        {bannerImages.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setCurrentBannerIndex(index)}
-                                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full mx-1 sm:mx-2 transition-colors duration-300 ${
-                                    currentBannerIndex === index ? 'bg-blue-600' : 'bg-gray-300'
-                                }`}
-                                aria-label={`Go to slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
                 </div>
             </section>
 
-            {/* Second Section */}
-            <Second />
 
-            {/* Trusted By Section - with improved styling */}
-            <div className="w-full px-4 sm:px-8 py-12 md:py-20 bg-gradient-to-b from-white to-blue-50">
-                <motion.h3 
+
+            {/* Trusted By Section - with improved styling and infinite slider */}
+            <div className="w-full py-5">
+                <motion.h3
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="text-2xl md:text-3xl font-bold text-center mb-10 text-gray-800"
+                    className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 md:mb-10 text-gray-800"
                 >
                     Trusted By Leading Brands
                 </motion.h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 justify-items-center items-center max-w-6xl mx-auto">
-                    {[one, two, three, four, five, six].map((img, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                            whileHover={{ scale: 1.05 }}
-                            className="w-full flex justify-center"
+                <div className="relative overflow-hidden">
+                    <motion.div
+                    className="flex items-center"
+                    animate={{
+                        x: [0, "-50%"]
+                    }}
+                    transition={{
+                        x: {
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        duration: 15,
+                        ease: "linear"
+                        }
+                    }}
+                    style={{
+                        width: "200%"
+                    }}
+                    >
+                    {/* Original logos */}
+                    {[one, two, three, four, five, six, seven, eight, nine].map((img, index) => (
+                        <div
+                        key={index}
+                        className="flex-shrink-0 px-4 sm:px-6 md:px-8 flex justify-center items-center"
+                        style={{ width: "16.66%" }} // 100 / 6
                         >
-                            <img 
-                                src={img} 
-                                alt={`Trusted partner ${index + 1}`} 
-                                className="h-28 w-auto filter  transition-all duration-300" 
-                            />
-                        </motion.div>
+                        <img
+                            src={img}
+                            alt={`Trusted partner ${index + 1}`}
+                            className="h-16 sm:h-20 md:h-28 w-auto filter transition-all duration-300 hover:scale-105"
+                        />
+                        </div>
                     ))}
+                    {/* Duplicate logos for seamless loop */}
+                    {[one, two, three, four, five, six].map((img, index) => (
+                        <div
+                        key={`duplicate-${index}`}
+                        className="flex-shrink-0 px-4 sm:px-6 md:px-8 flex justify-center items-center"
+                        style={{ width: "16.66%" }}
+                        >
+                        <img
+                            src={img}
+                            alt={`Trusted partner duplicate ${index + 1}`}
+                            className="h-16 sm:h-20 md:h-28 w-auto filter transition-all duration-300 hover:scale-105"
+                        />
+                        </div>
+                    ))}
+                    </motion.div>
                 </div>
-            </div>
+                </div>
+
+
+            {/* Second Section */}
+            <Second />
 
             {/* Ingredients Section */}
             <div className='relative z-20'>
                 <Ingredients />
             </div>
 
-            {/* Trust Section */}
-            <section className='relative z-20 bg-white'>
-                <Trust />
-            </section>
-
-            {/* Review Section */}
-            <section className='relative z-20 bg-black'>
-                <Review />
-            </section>
 
             {/* Additional content */}
             <div className='relative'>
                 <Work />
             </div>
 
-            {/* Why Use Section - with improved styling */}
-            <div className="bg-gradient-to-b from-white via-blue-50 to-white py-20">
-                <div className='container mx-auto px-4 md:px-8'>
-                    <motion.h1 
-                        initial={{ opacity: 0, y: -20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                        className='text-4xl md:text-6xl text-center font-bold mb-16 text-gray-800'
-                    >
-                        {why.maintitle}
-                    </motion.h1>
+            {/* Review Section */}
+            <section className='relative z-20 bg-black'>
+                <Review />
+            </section>
 
+            {/* Why Use Section - with improved styling */}
+            <div className="py-10">
+                <div className='px-4 md:px-8'>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 mt-12'>
                         {[
                             { img: why1, title: why.title4, para: why.para4 },
@@ -222,7 +218,7 @@ const Home = () => {
             <BlogPreview />
 
             <div>
-                <InstagramFeed />
+                {/* <InstagramFeed /> */}
             </div>
         </main>
     );

@@ -2,8 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { blogData } from '../utility/data';
 import { Link } from 'react-router-dom';
+import { blogSlugs } from '../utils/urlSlugs';
 
 const Blog = () => {
+  // Map blog data to slugs
+  const getBlogSlug = (id) => {
+    const slugEntry = Object.values(blogSlugs).find(slug => slug.id === id);
+    return slugEntry ? slugEntry.slug : id.toString();
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
       <div className="container mx-auto px-4 py-12">
@@ -54,7 +61,7 @@ const Blog = () => {
                     })}
                   </span>
                   <Link
-                    to={`/blog/${post.id}`}
+                    to={`/health-blog/${getBlogSlug(post.id)}`}
                     className="text-blue-600 font-medium hover:text-blue-700"
                   >
                     Read more →

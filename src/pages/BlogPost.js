@@ -3,17 +3,30 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { blogData } from '../utility/data';
 import { Helmet } from 'react-helmet-async';
+import { getBlogBySlug, blogSlugs } from '../utils/urlSlugs';
 
 const BlogPost = () => {
-    const { id } = useParams();
-    const post = blogData.find(post => post.id === parseInt(id));
+    const { id, slug } = useParams();
+    
+    // Handle both legacy ID-based URLs and new slug-based URLs
+    let post;
+    if (slug) {
+        // New slug-based URL
+        const blogSlug = getBlogBySlug(slug);
+        if (blogSlug) {
+            post = blogData.find(p => p.id === blogSlug.id);
+        }
+    } else if (id) {
+        // Legacy ID-based URL
+        post = blogData.find(p => p.id === parseInt(id));
+    }
 
     if (!post) {
         return (
             <div className="min-h-screen bg-gray-50 pt-24 flex items-center justify-center">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-gray-800 mb-4">Blog post not found</h1>
-                    <Link to="/blog" className="text-blue-600 hover:text-blue-700">
+                    <Link to="/health-blog" className="text-blue-600 hover:text-blue-700">
                         ← Back to all posts
                     </Link>
                 </div>
@@ -21,16 +34,22 @@ const BlogPost = () => {
         );
     }
 
+    // Get SEO data from slug
+    const seoData = Object.values(blogSlugs).find(s => s.id === post.id);
+
     return (
         <>
             <Helmet>
-                <title>{post.title} | Beyond Slim Blog</title>
-                <meta name="description" content={post.excerpt} />
+                <title>{seoData ? seoData.metaTitle : `${post.title} | Beyond Slim Blog`}</title>
+                <meta name="description" content={seoData ? seoData.metaDescription : post.excerpt} />
+                {seoData && seoData.keywords && (
+                    <meta name="keywords" content={seoData.keywords.join(', ')} />
+                )}
             </Helmet>
 
             <div className="min-h-screen bg-gray-50 pt-24">
                 <article className="max-w-4xl mx-auto px-4 py-12">
-                    <Link to="/blog" className="text-blue-600 hover:text-blue-700 mb-8 inline-block">
+                    <Link to="/health-blog" className="text-blue-600 hover:text-blue-700 mb-8 inline-block">
                         ← Back to all posts
                     </Link>
 
